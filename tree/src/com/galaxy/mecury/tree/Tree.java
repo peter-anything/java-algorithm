@@ -1,8 +1,5 @@
 package com.galaxy.mecury.tree;
 
-import sun.tools.jstat.Jstat;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
@@ -47,12 +44,21 @@ public class Tree {
         return root;
     }
 
+    public int height(TreeNode curr) {
+        if (curr == null) return 0;
+        int left = height(curr.left);
+        int right = height(curr.right);
+
+        return left > right ? left + 1 : right + 1;
+    }
+
     public void levelTraversal() {
         List<TreeNode> queue = new LinkedList<>();
         queue.add(root);
 
         while (!queue.isEmpty()) {
             TreeNode current = queue.remove(0);
+            System.out.println(current.data);
             if (current.left != null) {
                 queue.add(current.left);
             }
@@ -162,10 +168,31 @@ public class Tree {
         return 0;
     }
 
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) return root;
+
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        if (left != null && right != null) {
+            return root;
+        } else if (left != null) {
+            return left;
+        } else if (right != null) {
+            return right;
+        } else {
+            //may be not possible
+            return null;
+        }
+    }
+
     public static void main(String[] args) {
         Tree t = new Tree();
-        t.fromArray(new Integer[] {1, 2, 5, 3, 4, null, 9, 0});
+        t.fromArray(new Integer[] {3,5,1,6,2,0,8,null,null,7,4});
 //        t.levelTraversal();
-        t.innserMiddleOrderNonRecursiveTraversal(t.root);
+//        t.innserMiddleOrderNonRecursiveTraversal(t.root);
+        TreeNode result = t.lowestCommonAncestor(t.root, t.root.right, t.root.left.right);
+        System.out.println(result);
+        System.out.println(t.height(t.root));
     }
 }
